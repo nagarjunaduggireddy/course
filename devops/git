@@ -36,3 +36,4 @@ git clean -df .
 git restore
 git reset --hard
 git reflog
+git 
