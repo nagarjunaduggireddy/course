@@ -1,0 +1,41 @@
+---
+- name: install apache2 and httpd
+  become: yes
+  hosts: all
+  vars:
+   - ubuntu_package: apache2
+   - centos_package: httpd
+  tasks:
+   - name: install apache2 
+     ansible.builtin.apt:
+      name: "{{ ubuntu_package }}"
+      state: present
+     notify: 
+      - apache2 enabled and restarted
+      - update apche2
+     when: ansible_facts['os_family'] == "Debian"
+   - name: install httpd 
+     ansible.builtin.yum:
+      name: "{{ centos_package }}"
+      state: present
+     when: ansible_facts['os_family'] == "RedHat"
+     notify: 
+      - httpd enabled and started
+  handlers: 
+   - name: apache2 enabled and restarted
+     ansible.builtin.systemd:
+      name: apache2
+      enabled: yes
+      system: restarted  
+     when: ansible_facts['os_family'] == "Debian"
+   - name: httpd enabled and started
+     ansible.builtin.systemd:
+      name: httpd
+      enabled: yes
+      system: started 
+     when: ansible_facts['os_family'] == "RedHat"
+   - name: update apche2
+     ansible.builtin.apt:
+      name: apache2 
+      update_cache: yes
+     when: ansible_facts['os_family'] == "RedHat"

@@ -1,0 +1,53 @@
+# 3 types of appications basically
+
+1 java based
+2 python based
+3 apache based
+
+# files and copy
+------------------
+if want to create the file use file module. in files we cant copy to another node. 
+(it create and stored in same machine source and destinaton are in same instance. not in different instances.)
+
+if want to copy the file/directory from acs(ansible control server) to node use copy module
+# template copy the dynamic value were as copy copies the static value.
+
+to download use _get_url:
+
+-------------------------------------------------------------
+example of using become in different cases
+------------------------
+become: yes
+hosts:
+tasks:
+ - name: copy the fies
+   become: no
+   ansible.builtin.template:
+    src:
+    dest:
+    -------------------------------------------------------
+
+    see and check "line in file"
+    -----------------------------------------------------
+    debug:
+     msg:
+
+    ----------------------------------------------------
+    pre_tasks:
+    tasks:
+    post_tasks:
+    ----------------------------------------------------
+    ansible-galaxy init <role_name>
+    ----------------------------------------------------
+    scp -r
+    sftp
+    ----------------------------------------------------
+    molecule
+    ------------------------------------------------------
+    ansible roles located
+    ------
+    ansible roles can host in ansible-galaxy, home directory, playbook
+    ----------------------------------------------------
+    # ansible parllesim
+    ansible-playbook -f 5(default)/50/100..
+     etc 

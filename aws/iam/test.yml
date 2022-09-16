@@ -1,0 +1,21 @@
+---
+- name: host report collection
+  become: yes
+  hosts: all
+  tasks:
+  - name: copy 
+     ansible.builtin.copy:
+      src: 
+      dest: 
+  - name: permission
+  ansible.builtin.file:
+    path:
+    owner:
+    mode:
+  - name: 
+  ansible.builtin.shell: somescript.sh >> somelog.txt
+    - name: copy 
+     ansible.builtin.copy:
+      src: 
+      dest: 
+

@@ -1,0 +1,19 @@
+---
+- name: git in redhat and centos
+  become: yes
+  hosts: all
+  tasks:
+   - name: install git
+     ansible.builtin.package:
+     name: git
+     state: present
+    notify:
+     - git enabled and started
+  handlers: 
+   - name: git enabled and started
+     ansible.builtin.systemd:
+      name: git
+      enabled: yes
+      system: restarted  
+  
+    

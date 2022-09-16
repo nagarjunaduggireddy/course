@@ -1,0 +1,44 @@
+---
+- name: tomcat installation
+ become: yes
+ hosts: all
+ tasks:
+   - name: update ubuntu and install jdk11
+     ansible.builtin.apt:
+      name: openjdk-11-jdk
+      update_cache: yes
+      state: present
+   - name: add user and home directory
+     ansible.builtin.user:
+      name: tomcat
+      group: tomcat
+      home: /opt/tomcat
+      create_home: yes
+      shell: /bin/false
+   - name: copy tomcat file 
+     ansible.builtin.copy:
+      src: apache-tomcat-9.0.65
+      dest: /opt/tomcat
+   - name: Create a symbolic link and change ownership
+     ansible.builtin.file:
+      src: /opt/tomcat/apache-tomcat-9.0.65
+      dest: /opt/tomcat/latest
+      owner: tomcat
+      group: tomcat
+      state: link
+   - name: shell execute permission
+     ansible.builtin.file:
+      path: "{{ item }}"
+      mode: "+x"
+      with_fileglob:
+        - "/opt/tomcat/latest/bin/*.sh"  
+   - name: copy tomcat service file
+     ansible.builtin.copy:
+      src: tomcat.service
+      dest: /etc/systemd/system/tomcat.service
+   - name: demon reloaded and enable tomcat service
+     ansible.builtin.systemd:
+      name: tomcat
+      daemon_reload: yes
+      enabled: yes
+   

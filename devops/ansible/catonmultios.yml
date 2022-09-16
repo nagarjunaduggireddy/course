@@ -1,0 +1,60 @@
+---
+- name: tomcat installation
+  become: yes
+  hosts: all
+  tasks:
+   - name: update ubuntu and install jdk11
+     ansible.builtin.yum:
+      name: java-1.8.0-openjdk-devel
+      state: present
+   - name: add user and home directory
+     ansible.builtin.user:
+      name: tomcat
+      home: /opt/tomcat
+      create_home: yes
+      shell: /bin/false
+   - name: copy tomcat file
+     ansible.builtin.copy:
+      src: apache-tomcat-9.0.65.tar.gz
+      dest: /opt/tomcat
+   - name: Create a symbolic link and change ownership
+     ansible.builtin.file:
+      src: /opt/tomcat/apache-tomcat-9.0.65
+      dest: /opt/tomcat/latest
+      owner: tomcat
+      group: tomcat
+      state: link
+   - name: shell execute permission
+     ansible.builtin.file:
+      path: "{{ item }}"
+      mode: "+x"
+      recurse: yes
+      state: directory
+     with_fileglob:
+      - /opt/tomcat/latest/bin/*.sh
+   - name: copy tomcat service file
+     ansible.builtin.copy:
+      src: tomcat.service
+      dest: /etc/systemd/system/tomcat.service
+   - name: demon reloaded and enable tomcat service
+     ansible.builtin.systemd:
+      name: tomcat
+      daemon_reload: yes
+      enabled: yes
+      state: started
+   - name: copy file for tomcat-users.xml
+     ansible.builtin.copy:
+      src: tomcat-users.xml
+      dest: nano /opt/tomcat/latest/conf/tomcat-users.xml
+   - name: copy file for Manager app
+     ansible.builtin.copy:
+      src: context.xml
+      dest: /opt/tomcat/latest/webapps/manager/META-INF/context.xml
+   - name: copy file for Host Manager app
+     ansible.builtin.copy:
+      src: context.xml
+      dest: /opt/tomcat/latest/webapps/host-manager/META-INF/context.xml
+   - name: demon reloaded and enable tomcat service
+     ansible.builtin.systemd:
+     name: tomcat
+     state: restarted

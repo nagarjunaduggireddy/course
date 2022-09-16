@@ -1,0 +1,84 @@
+host entry:
+---------------------------------------------
+# ini inventory
+------------------
+172.31.41.29 package_name=httpd
+172.31.46.211 package_name=apache2
+--------------------------------------------
+# jinja2 inventory
+-------------------
+  all:
+  children:
+    webservers:
+      hosts:
+        172.31.41.29:
+           package_name: httpd
+           php_modules: 
+            - php
+        172.31.46.211:
+           package_name: apache2
+           php_modules: 
+            - php
+            - libapache2-mod-php
+            - php-cli
+----------------------------------------------------------------------------
+# directory structure 
+---------------------
+# vi hosts:
+------
+[RedHat]
+172.31.41.29
+
+[ubuntu]
+172.31.46.211
+
+[webservers]
+172.31.41.29
+172.31.46.211
+-------------------------
+#vi host_vars/172.31.41.29
+------
+package_name: httpd
+--------------------
+#vi group_vars/webservers
+-------
+ package_name: apache2
+ php_modules: 
+  - php
+-----------------------------------------
+
+# install apache2 and httpd
+---
+- name: install apache2 and httpd
+  become: yes
+  hosts: all
+  tasks:
+   - name: install apache2 and httpd
+     ansible.builtin.package:
+      name: "{{ package_name }}"
+      state: present
+     notify: 
+      - enabled and restarted package
+      - update package 
+     when: ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "RedHat"
+   - name: install php modules
+     ansible.builtin.package:
+      name: "{{ item }}"
+      state: present
+     loop: "{{ php_modules }}"
+     notify: 
+      - enabled and restarted package
+      - update package 
+     when: ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "RedHat"
+  handlers: 
+   - name: enabled and restarted package
+     ansible.builtin.systemd:
+      name: "{{ package_name }}"
+      enabled: yes
+      system: restarted  
+     when: ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "RedHat"
+   - name: update package 
+     ansible.builtin.apt:
+      name: "{{ package_name }}" 
+      update_cache: yes
+     when: ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "RedHat"

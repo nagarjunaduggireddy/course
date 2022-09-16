@@ -1,0 +1,38 @@
+git init (create rep in local machine i.e. .git folder)
+git add file/./--all/-A 
+git add -u ./--all (add modified changes only)
+git commit -m "comment" (commit)
+git commit -am "comment" (add and commit)
+tracked/untracked (contain history/not)
+git status (change status)
+git log --oneline --graph --all (history)
+git checkout branch/commit id (change the head position)
+git branch new branch  (add local branch)
+git branch -r remote branche (add remote branch)
+git branch -a local branch (add local branch)
+git branch -M oldbranch newbranch (rename branch)
+dest branch# git merge sourcebranch --no-ff (merge/ if merge happens from 2 ways is called 3 way merge)
+dest branch# git merge sourcebranch  (fast farward)
+rebase & interactive rebase:
+rebase: dest branch# git rebase sourcebranch (here parent id and commit id changes)
+interactive rebase: dest branch# git rebase -i HEAD~3 (squash merge, delete,edit commit, ....)
+git cherry-pick "source commit id" or "sourcecommitid..destinationcommitid" (pick perticular changes only)
+if any merge conflict (modify - #git add . &  # git merge/rebase --continue)
+HEAD (show the pointer of current state by default it see ref and ref sees master)
+MASTER (default local rep branch)
+main (default remote rep branch)
+orgin (remote rep)
+git push/pull (fetch+merge)
+git pull --rebase (it is same like rebase in local rep)
+git clone (it bring remote rep into local along with .git folder)
+git remote add remote branch/commit (establish linking between remote and local rep)
+git push remotename remotebranchname
+hashing/sha1 (git follow sha1 hash algorithum)
+ref 
+commit id
+object - tree
+blob  - file
+git clean -df .
+git restore
+git reset --hard
+git reflog
