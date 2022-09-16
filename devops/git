@@ -26,7 +26,7 @@ git push/pull (fetch+merge)
 git pull --rebase (it is same like rebase in local rep)
 git clone (it bring remote rep into local along with .git folder)
 git remote add remote branch/commit (establish linking between remote and local rep)
-git push remotename remotebranchname
+git push -f remotename remotebranchname (-f forcefull)
 hashing/sha1 (git follow sha1 hash algorithum)
 ref 
 commit id
